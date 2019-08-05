@@ -28,7 +28,7 @@ class User {
         $mysqli = $db->getCon();
         
         $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
-        $query->bind_param('ss', $this->username);
+        $query->bind_param('s', $this->username);
         $result = $query->execute();
         if(!$result) {
             throw new Exception("User not found");
