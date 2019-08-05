@@ -83,8 +83,8 @@ class User {
         }
         
         $token = uniqid();
-        $query = $mysqli->prepare("UPDATE members SET token = ?");
-        $query->bind_param('s', $token);
+        $query = $mysqli->prepare("UPDATE members SET token = ? WHERE user = ?");
+        $query->bind_param('ss', $token, $this->user);
         $result = $query->execute();
 
         $resetUrl = $this->config['website_url'] . "/forgot?token=" . $token;
