@@ -49,7 +49,7 @@ class User {
     }
 
     public function register() {
-        $db = new Database('config.ini.php');
+        $db = new Database();
         $mysqli = $db->getCon();
 
         $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
@@ -72,7 +72,7 @@ class User {
     }
 
     public function forgot() {
-        $db = new Database('config.ini.php');
+        $db = new Database();
         $mysqli = $db->getCon();
 
         $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
