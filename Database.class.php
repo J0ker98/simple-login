@@ -5,8 +5,8 @@ class Database {
     private $con;
     private $config;
 
-    public function __construct($configPath) {
-        $this->config = parse_ini_file($configPath);
+    public function __construct() {
+        $this->config = parse_ini_file("config.ini.php");
         $this->con = new mysqli(
             $this->config['db_host'], 
             $this->config['db_user'], 
