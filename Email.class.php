@@ -19,7 +19,7 @@ class Email {
         $this->config = parse_ini_file("config.ini.php");
 
         $this->email = new \SendGrid\Mail\Mail();
-        $this->email->setFrom($this->config['fromEmail'], $this->config['fromName']);
+        $this->email->setFrom($this->config['from_email'], $this->config['from_name']);
         $this->email->setSubject("Sending with SendGrid is Fun");
         $this->email->addTo($toEmail, $toName);
 

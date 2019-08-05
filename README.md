@@ -10,6 +10,8 @@ Basic login system with password hasing and salt
     id VARCHAR(13) NOT NULL,
     user VARCHAR(25) NOT NULL,
     password TEXT NOT NULL,
+    name TEXT NOT NULL,
+    token TEXT,
     PRIMARY KEY (id)
 ) ENGINE=INNODB
 ```

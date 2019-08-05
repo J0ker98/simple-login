@@ -8,5 +8,8 @@ db_password =
 
 [email]
 SENDGRID_API_KEY =
-fromEmail =
-fromName = 
+from_email =
+from_name = 
+
+[website]
+website_url = 
