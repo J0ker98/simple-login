@@ -24,7 +24,7 @@ class User {
     public function getId() { return $this->id; }
 
     public function login() {
-        $db = new Database('config.ini.php');
+        $db = new Database();
         $mysqli = $db->getCon();
         
         $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
