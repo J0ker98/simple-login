@@ -1,6 +1,6 @@
 <?php
 
-require("./SendGrid/sendgrid-php.php");
+require("./sendgrid-php/sendgrid-php.php");
 
 class Email {
 
