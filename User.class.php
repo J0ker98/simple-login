@@ -42,4 +42,27 @@ class User {
         return password_verify($storedPassword, $this->password);
     }
 
+    public function register() {
+        $db = new Database('config.ini.php');
+        $mysqli = $db->getCon();
+
+        $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
+        $query->bind_param('s', $this->username);
+        $result = $query->execute();
+        if($result->num_rows > 0) {
+            throw new Exception("User already exists");
+        }
+
+        $query = $mysqli->prepare("INSERT INTO members (id, user, password) VALUES(?, ?, ?)");
+        $query->bind_param('sss', $this->id, $this->username, $this->password);
+        $result = $query->execute();
+        if(!$result) {
+            throw new Exception("User creation error");
+        }
+
+        $db->close();
+
+        return true;
+    }
+
 }
