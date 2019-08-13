@@ -13,3 +13,9 @@ from_name =
 
 [website]
 website_url = 
+
+[facebook]
+app_id = 
+app_secret =
+redirect_uri = 
+home_page = 
