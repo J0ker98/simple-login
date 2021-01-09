@@ -20,7 +20,7 @@ class Email {
 
         $this->email = new \SendGrid\Mail\Mail();
         $this->email->setFrom($this->config['from_email'], $this->config['from_name']);
-        $this->email->setSubject("Sending with SendGrid is Fun");
+        $this->email->setSubject($this->config['website_name']);
         $this->email->addTo($toEmail, $toName);
 
         $this->sendgrid = new \SendGrid($this->config['SENDGRID_API_KEY']);

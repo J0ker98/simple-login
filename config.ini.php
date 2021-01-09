@@ -13,6 +13,7 @@ from_name =
 
 [website]
 website_url = 
+website_name = 
 
 [facebook]
 app_id = 

@@ -8,20 +8,16 @@ class User {
 
     private $config;
 
-    public function __construct($username, $password, $name = "") {
-        $this->username = $username;
-        $this->password = $this->hashPassword($password);
-        $this->id = uniqid();
+    public function __construct($username, $password, $name) {
+        $this->username = strtolower($username);
+        $this->password = $password;
         $this->name = $name;
-
+    
         $this->config = parse_ini_file("config.ini.php");
     }
 
     public function hashPassword($password) {
-        $options = [
-            'cost' => 11,
-        ];
-        return password_hash($password, PASSWORD_BCRYPT, $options);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function getUsername() { return $this->username; }
@@ -34,36 +30,50 @@ class User {
         
         $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
         $query->bind_param('s', $this->username);
-        $result = $query->execute();
+        $query->execute();
+        $result = $query->get_result();
         if($result->num_rows <= 0) {
             throw new Exception("User not found");
         }
+        $query->close();
 
-        $fetch = $result->fetch_row();
-        $storedPassword = $fetch['password'];
+        $fetch = $result->fetch_array();
+        $this->id = $fetch['id'];
+        $this->username = $fetch['username'];
+        $this->name = $fetch['name'];
+        
         
         $db->close();
 
-        return password_verify($storedPassword, $this->password);
+        return password_verify($this->password, $fetch['password']);
     }
 
     public function register() {
         $db = new Database();
         $mysqli = $db->getCon();
 
-        $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
+        if(empty($this->name)) {
+            throw new Exception("Name cannot be empty on register method call");
+        }
+
+        $query = $mysqli->prepare("SELECT * FROM `members` WHERE `user` = ?");
+
         $query->bind_param('s', $this->username);
-        $result = $query->execute();
+        $query->execute();
+        $result = $query->get_result();
         if($result->num_rows > 0) {
             throw new Exception("User already exists");
         }
+        $query->close();
 
-        $query = $mysqli->prepare("INSERT INTO members (id, user, password, name) VALUES(?, ?, ?, ?)");
-        $query->bind_param('ssss', $this->id, $this->username, $this->password, $this->name);
-        $result = $query->execute();
+        $query = $mysqli->prepare("INSERT INTO `members` (`id`, `user`, `password`, `name`) VALUES(?, ?, ?)");
+        $query->bind_param('ssss', $this->id, $this->username, $this->hashPassword($this->password), $this->name);
+        $query->execute();
+        $result = $query->get_result();
         if(!$result) {
             throw new Exception("User creation error");
         }
+        $query->close();
 
         $db->close();
 
@@ -76,15 +86,19 @@ class User {
 
         $query = $mysqli->prepare("SELECT * FROM members WHERE user = ?");
         $query->bind_param('s', $this->username);
-        $result = $query->execute();
+        $query->execute();
+        $result = $query->get_result();
         if($result->num_rows <= 0) {
             throw new Exception("User not found");
         }
+        $query->close();
         
         $token = uniqid();
         $query = $mysqli->prepare("UPDATE members SET token = ? WHERE user = ?");
         $query->bind_param('ss', $token, $this->user);
-        $result = $query->execute();
+        $query->execute();
+        $result = $query->get_result();
+        $query->close();
 
         $resetUrl = $this->config['website_url'] . "/forgot?token=" . $token;
 
